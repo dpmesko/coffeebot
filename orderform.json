@@ -1,0 +1,170 @@
+{
+	"channel": "CL9GHRNSH",
+	"attachments":  
+		[ { "blocks": [
+	{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": "Hey team! It's *coffee time*! Submit your order using the buttons below."
+		}
+	},
+	{
+		"type": "divider"
+	},
+	{
+		"type": "divider"
+	},
+	{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": "What size?"
+		},
+		"accessory": {
+			"type": "static_select",
+			"placeholder": {
+				"type": "plain_text",
+				"text": "Select a size",
+				"emoji": true
+			},
+			"options": [
+				{
+					"text": {
+						"type": "plain_text",
+						"text": "Small",
+						"emoji": true
+					},
+					"value": "value-0"
+				},
+				{
+					"text": {
+						"type": "plain_text",
+						"text": "Medium",
+						"emoji": true
+					},
+					"value": "value-1"
+				},
+				{
+					"text": {
+						"type": "plain_text",
+						"text": "Large",
+						"emoji": true
+					},
+					"value": "value-2"
+				}
+			]
+		}
+	},
+	{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": "Any cream or milk?"
+		},
+		"accessory": {
+			"type": "static_select",
+			"placeholder": {
+				"type": "plain_text",
+				"text": "None",
+				"emoji": true
+			},
+			"options": [
+				{
+					"text": {
+						"type": "plain_text",
+						"text": "None",
+						"emoji": true
+					},
+					"value": "value-0"
+				},
+				{
+					"text": {
+						"type": "plain_text",
+						"text": "Soy Milk",
+						"emoji": true
+					},
+					"value": "value-1"
+				},
+				{
+					"text": {
+						"type": "plain_text",
+						"text": "2%",
+						"emoji": true
+					},
+					"value": "value-2"
+				},
+                {
+					"text": {
+						"type": "plain_text",
+						"text": "Whole Milk",
+						"emoji": true
+					},
+					"value": "value-3"
+				},
+                {
+					"text": {
+						"type": "plain_text",
+						"text": "Half and Half",
+						"emoji": true
+					},
+					"value": "value-4"
+				}
+			]
+		}
+	},
+	{
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": "Some sugar or sweetener?"
+		},
+		"accessory": {
+			"type": "static_select",
+			"placeholder": {
+				"type": "plain_text",
+				"text": "None",
+				"emoji": true
+			},
+			"options": [
+				{
+					"text": {
+						"type": "plain_text",
+						"text": "None",
+						"emoji": true
+					},
+					"value": "value-0"
+				},
+				{
+					"text": {
+						"type": "plain_text",
+						"text": "Sugar",
+						"emoji": true
+					},
+					"value": "value-1"
+				},
+				{
+					"text": {
+						"type": "plain_text",
+						"text": "Splenda",
+						"emoji": true
+					},
+					"value": "value-2"
+				},
+                {
+					"text": {
+						"type": "plain_text",
+						"text": "Sweet and Low",
+						"emoji": true
+					},
+					"value": "value-3"
+				}
+		
+			]
+		}
+		
+	}
+	]}
+]
+}
+}
