@@ -7,7 +7,7 @@
 				"type": "section",
 				"text": {
 					"type": "mrkdwn",
-					"text": "Hey team! It's *coffee time*! Submit your order by mentioning CoffeeBot in a message below."
+					"text": "Hey team! It's *coffee time*! Submit your order using */coffee* in this channel."
 				}
 			}
 			]
