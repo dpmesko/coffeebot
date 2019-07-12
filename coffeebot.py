@@ -12,7 +12,7 @@
 import sys
 import slack 
 import json
-
+import datetime
 
 class coffeeOrder:
 
@@ -29,12 +29,24 @@ class coffeeOrder:
 
 	def __init__(self, channel):
 		self.channel = channel
+		self.out_file = open("orders.txt", 'w')
+	
+		date = datetime.date.today()
+
+		header = ('COFFEE ORDER FOR ' + date.isoformat() + '\n')
+		self.out_file.write(header)
+
 
 	def getordermsg(self):
-		return self.ORDERFORM
+		return {
+			'channel' : self.channel,
+			'blocks' : self.ORDERFORM
+		}
 
-	def getorders(self):
-		return self.ORDERFORM
+	def addorder(self, user, order):
+
+		ordstr = 'User ' + user + ' wants ' + order
+		self.out_file.write(ordstr)
 
 
 if __name__ == '__main__':
@@ -52,15 +64,12 @@ if __name__ == '__main__':
 
 	client = slack.WebClient(token)
 
-
-	order_file = open('orderentry.json', 'r+')
-	order = order_file.read()
-	
 	order = coffeeOrder("CL9GHRNSH")
+	
+	response = client.chat_postMessage(**(order.getordermsg()))
 
-	response = client.chat_postMessage(
-			channel = order.channel,
-			blocks = order.getordermsg())
+	if 'not_authed' in response:
+		print('Error: OAuth access token is invalid')
 
-	print(response)
+
 
