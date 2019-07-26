@@ -17,9 +17,12 @@ After  15 minutes, a file named *orders.txt* will appear in the *coffeebot/* dir
 ## Runnign CoffeeBot
 
 
-*NOTE:* Workspace/Bot OAuth access tokens cannot appear in public GitHub repos
-application's token will be pulled from a file 
-located outside of this repo. Make sure your workspace/bot token is in a file
-on your filesystem and the file path is specified. Tokens are generated
-from the Slack API page for your application, for example:
-www.coffeebot.slack.com/api
+## Slack API Docs
+The Slack API is very well documented:
+
+www.slack.com/api
+
+The Slack API Client for Python, which is used in CoffeeBot, is also well documented:
+
+https://github.com/slackapi/python-slackclient
+
