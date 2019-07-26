@@ -10,11 +10,11 @@ Users then have 15 minutes to invoke the slash command  **_/coffee_** followed b
 After  15 minutes, a file named *orders.txt* will appear in the *coffeebot/* directory with the list of orders, ready to be sent to the coffeeshop!
 
 
-## Installign CoffeeBot Into Your Workspace
+## Installing CoffeeBot Into Your Workspace
 
 ## Using ngrok to run CoffeeBot locally
 
-## Runnign CoffeeBot
+## Running CoffeeBot
 
 
 ## Slack API Docs
