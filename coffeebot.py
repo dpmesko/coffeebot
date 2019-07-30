@@ -58,23 +58,35 @@ def handle_client(clntsock):
 	global order
 
 	response = b''
-	while True:
-		bit = clntsock.recv(1024)
-		if not bit:
-			break
-		response += bit
+#	while True:
+	bit = clntsock.recv(1024)
+	if not bit:
+		sys.exit(1)
+	response += bit
 
+	resp_str = b'HTTP/1.1 200 OK\r\n'
+	clntsock.send(resp_str)
+	
+	# parse user order from encoded url
+	response = str(response)
+	usersub = response.split('user_name=')
+	user = (usersub[1].split('&'))[0]
+	user_ordersub = response.split('text=')
+	user_order = (user_ordersub[1].split('&'))[0]
+
+#	for x in response:
 	order.lock.acquire()
-	order.add('john', str(response))
+	order.add(user, user_order)
 	order.lock.release()
+
 	sys.exit()
 
 if __name__ == '__main__':
 	
-	# parse OAuth token command line arg
-	if len(sys.argv) != 2:
-		err_str = ('ERROR: Please include the filepath to your OAuth access token '
-			+ 'as the sole comamand line argument.')
+	# parse OAuth token, portnum command line args
+	if len(sys.argv) != 3:
+		err_str = ('ERROR: Incorrect usage\n' + 
+				'Usage: python3 coffebot.py <OAuth_token_file> <port_number>')
 		print(err_str)
 		sys.exit(1)
 
@@ -108,9 +120,9 @@ if __name__ == '__main__':
 	# listen to port 2112 for 15 minutes for slash command payload
 	#   from slack
 
-	timeout = time.time() + 60*15
+	timeout = time.time() + 60
 	socket = socket.socket()
-	socket.bind(('',2112))
+	socket.bind(('',int(sys.argv[2])))
 	socket.listen(5)
 
 	# TODO: timeout won't be checked until one final connection is accepted...
@@ -118,6 +130,7 @@ if __name__ == '__main__':
 	while timeout > time.time():
 		clntsock, addr = socket.accept()
 		thread = threading.Thread(target=handle_client, args=(clntsock,))
+		print('Incoming connection from ' + str(addr) + '\nStarting handler thread...')
 		thread.start()
 
 
