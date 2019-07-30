@@ -56,17 +56,16 @@ class coffeeOrder:
 
 def handle_client(clntsock):
 	global order
-
+		
 	response = b''
-#	while True:
-	bit = clntsock.recv(1024)
-	if not bit:
-		sys.exit(1)
-	response += bit
+	bit = b''
 
-	resp_str = b'HTTP/1.1 200 OK\r\n'
-	clntsock.send(resp_str)
-	
+	while b'\r\n\r\n' not in response:
+		bit = clntsock.recv(1024)
+		response += bit
+
+
+
 	# parse user order from encoded url
 	response = str(response)
 	usersub = response.split('user_name=')
@@ -79,7 +78,12 @@ def handle_client(clntsock):
 	order.add(user, user_order)
 	order.lock.release()
 
+	# TODO: Add an ACK message to the response reading back the order 
+	resp_str = 'HTTP/1.1 200 OK\r\n\r\n'
+	clntsock.send(resp_str.encode())
+	clntsock.close()
 	sys.exit()
+
 
 if __name__ == '__main__':
 	
@@ -125,14 +129,17 @@ if __name__ == '__main__':
 	socket.bind(('',int(sys.argv[2])))
 	socket.listen(5)
 
+	
 	# TODO: timeout won't be checked until one final connection is accepted...
 	# use select()...
 	while timeout > time.time():
 		clntsock, addr = socket.accept()
-		thread = threading.Thread(target=handle_client, args=(clntsock,))
+	
 		print('Incoming connection from ' + str(addr) + '\nStarting handler thread...')
+		thread = threading.Thread(target=handle_client, args=(clntsock,))
 		thread.start()
 
+		
 
 
 
