@@ -29,7 +29,10 @@ class coffeeOrder:
 			}
 		]
 
-
+	OK_RESPONSE = {
+    	"response_type": "ephemeral",
+   		 "text": "Your order has been received!",
+	}
 	def __init__(self, channel):
 		self.channel = channel
 		self.out_file = open("orders.txt", 'w')
@@ -39,7 +42,6 @@ class coffeeOrder:
 
 		header = ('COFFEE ORDER FOR ' + date.isoformat() + '\n')
 		self.out_file.write(header)
-
 
 	def getordermsg(self):
 		return {
@@ -52,6 +54,25 @@ class coffeeOrder:
 		ordstr = user + ' wants ' + order + '\n'
 		self.out_file.write(ordstr)
 
+	def get_response(self, status):
+		
+		resp_str = ''
+		resp_status = ''
+		resp_headers = ''
+		resp_content = ''
+		
+		if status == 200:
+			resp_status = 'HTTP/1.1 200 OK\r\n'
+			resp_headers = 'Content-Length: ' + str(len(str(self.OK_RESPONSE))) + '\r\n'
+			resp_headers += 'Content-Type: application/json\r\n'
+			resp_content = str(self.OK_RESPONSE)
+			resp_str = resp_status + resp_headers + '\r\n' + resp_content
+
+		else:
+			resp_status = 'HTTP/1.1 400 Bad Request\r\n'
+			resp_str = resp_status + '\r\n'
+
+		return resp_str
 
 
 def handle_client(clntsock):
@@ -78,8 +99,8 @@ def handle_client(clntsock):
 	order.add(user, user_order)
 	order.lock.release()
 
-	# TODO: Add an ACK message to the response reading back the order 
-	resp_str = 'HTTP/1.1 200 OK\r\n\r\n'
+	# TODO: Add checks for good/bad requesT 
+	resp_str = order.get_response(200)
 	clntsock.send(resp_str.encode())
 	clntsock.close()
 	sys.exit()
@@ -100,7 +121,7 @@ if __name__ == '__main__':
 	token = token.rstrip('\n')
 
 	client = slack.WebClient(token)
-	
+		
 	# finds the channelID of a channel named coffee, stores it
 	response = client.channels_list()
 	channels = response.get("channels")
