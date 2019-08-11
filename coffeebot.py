@@ -85,8 +85,6 @@ def handle_client(clntsock):
 		bit = clntsock.recv(1024)
 		response += bit
 
-
-
 	# parse user order from encoded url
 	response = str(response)
 	usersub = response.split('user_name=')
@@ -142,10 +140,9 @@ if __name__ == '__main__':
 	order = coffeeOrder(channel_id)
 	response = client.chat_postMessage(**(order.getordermsg()))
 
-	# listen to port 2112 for 15 minutes for slash command payload
-	#   from slack
 
-	timeout = time.time() + 60
+	# listen for 10 minutes
+	timeout = time.time() + 60*10
 	socket = socket.socket()
 	socket.bind(('',int(sys.argv[2])))
 	socket.listen(5)
