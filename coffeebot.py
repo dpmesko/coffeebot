@@ -159,7 +159,6 @@ if __name__ == '__main__':
 	while timeout > time.time():
 		clntsock, addr = socket.accept()
 	
-		print('Incoming connection from ' + str(addr) + '\nStarting handler thread...')
 		thread = threading.Thread(target=handle_client, args=(clntsock,))
 		thread.start()
 
