@@ -15,6 +15,7 @@ import datetime
 import time
 import threading
 import socket
+import json
 
 
 class coffeeOrder:
@@ -29,10 +30,9 @@ class coffeeOrder:
 			}
 		]
 
-	OK_RESPONSE = {
-    	"response_type": "ephemeral",
-   		 "text": "Your order has been received!",
-	}
+
+
+
 	def __init__(self, channel):
 		self.channel = channel
 		self.out_file = open("orders.txt", 'w')
@@ -43,34 +43,40 @@ class coffeeOrder:
 		header = ('COFFEE ORDER FOR ' + date.isoformat() + '\n')
 		self.out_file.write(header)
 
+
 	def getordermsg(self):
 		return {
 			'channel' : self.channel,
 			'blocks' : self.ORDERFORM
 		}
 
+
 	def add(self, user, order):
-
-		ordstr = user + ' wants ' + order + '\n'
-		self.out_file.write(ordstr)
-
-	def get_response(self, status):
+		
+	
+		response_msg = { "response_type" : "ephemeral",
+			   			 "text" : "Your order has been received!",
+	 					 "attachments" : [
+						 		{ "type" : "mrkdown",
+						 		  "text" : "_" + order + "_"
+							    }
+						 ]
+		}
+		
+		resp_json = json.dumps(response_msg)
 		
 		resp_str = ''
 		resp_status = ''
 		resp_headers = ''
-		resp_content = ''
-		
-		if status == 200:
-			resp_status = 'HTTP/1.1 200 OK\r\n'
-			resp_headers = 'Content-Length: ' + str(len(str(self.OK_RESPONSE))) + '\r\n'
-			resp_headers += 'Content-Type: application/json\r\n'
-			resp_content = str(self.OK_RESPONSE)
-			resp_str = resp_status + resp_headers + '\r\n' + resp_content
 
-		else:
-			resp_status = 'HTTP/1.1 400 Bad Request\r\n'
-			resp_str = resp_status + '\r\n'
+		ordstr = user + ' wants ' + order + '\n'
+		self.out_file.write(ordstr)
+
+		resp_status = 'HTTP/1.1 200 OK\r\n'
+		resp_headers = 'Content-Length: ' + str(len(resp_json)) + '\r\n'
+		resp_headers += 'Content-Type: application/json\r\n'
+		resp_str = resp_status + resp_headers + '\r\n' + resp_json
+
 
 		return resp_str
 
@@ -91,14 +97,13 @@ def handle_client(clntsock):
 	user = (usersub[1].split('&'))[0]
 	user_ordersub = response.split('text=')
 	user_order = (user_ordersub[1].split('&'))[0]
+	user_order = user_order.replace('+', ' ')
 
-#	for x in response:
+	# add order, get response
 	order.lock.acquire()
-	order.add(user, user_order)
+	resp_str = order.add(user, user_order)
 	order.lock.release()
 
-	# TODO: Add checks for good/bad requesT 
-	resp_str = order.get_response(200)
 	clntsock.send(resp_str.encode())
 	clntsock.close()
 	sys.exit()
@@ -120,18 +125,19 @@ if __name__ == '__main__':
 
 	client = slack.WebClient(token)
 		
-	# finds the channelID of a channel named coffee, stores it
+	# finds the channelID of general, stores it
 	response = client.channels_list()
 	channels = response.get("channels")
 
 	channel_id = None	
 	for x in channels:
-		if x['name'] == 'coffee':
+		if x['name'] == 'general':
 			channel_id = x['id']
 			break
 
+	# shouldn't happen unless general channel is removed
 	if channel_id == None:
-		print('ERROR: No channel named \"coffee\" found in this workspace')
+		print('ERROR: No channel named \"general\" found in this workspace')
 		sys.exit(1)	
 	
 
