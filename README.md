@@ -2,7 +2,6 @@
 
 Welcome to CoffeeBot, an automated coffee order retrieval application using the Slack API!
 
-**STILL IN DEVELOPMENT**
 
 ## What it does
 Run coffeebot locally to automatically collect coffee orders from your team via your Slack worksapce. A message will be sent to the channel named "coffee" in your workspace (must already exist). 
